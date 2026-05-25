@@ -273,7 +273,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base", help="Base git ref for changed-file detection.")
     parser.add_argument("--head", default=os.environ.get("GITHUB_SHA", "HEAD"), help="Head git ref for changed-file detection.")
     parser.add_argument("--output-dir", default="anki/pending", help="Directory for generated TSV files.")
-    parser.add_argument("--model", default=os.environ.get("OPENAI_MODEL", "gpt-5.5"), help="OpenAI model to use.")
+    parser.add_argument("--model", default=os.environ.get("OPENAI_MODEL", "gpt-4.1-mini"), help="OpenAI model to use.")
     return parser.parse_args()
 
 
