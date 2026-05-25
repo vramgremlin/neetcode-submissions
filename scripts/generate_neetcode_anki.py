@@ -186,7 +186,6 @@ def call_openai(prompt: str, api_key: str, model: str, retries: int = 2) -> dict
                 },
                 {"role": "user", "content": prompt},
             ],
-            "temperature": 0.2,
         }
     ).encode("utf-8")
 
