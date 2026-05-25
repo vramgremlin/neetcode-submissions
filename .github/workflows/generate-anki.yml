@@ -1,0 +1,56 @@
+name: Generate Anki Cards
+
+on:
+  push:
+    paths:
+      - "**/*.py"
+      - "**/*.java"
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.cpp"
+      - "**/*.go"
+      - "**/*.rs"
+      - "scripts/generate_neetcode_anki.py"
+      - ".github/workflows/generate-anki.yml"
+  workflow_dispatch:
+    inputs:
+      generate_all:
+        description: "Generate cards for all supported solution files"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  generate-anki:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate TSV files
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.generate_all }}" = "true" ]; then
+            python scripts/generate_neetcode_anki.py --all
+          else
+            python scripts/generate_neetcode_anki.py
+          fi
+
+      - name: Upload TSV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neetcode-anki-tsv
+          path: anki/pending/*.tsv
+          if-no-files-found: warn
